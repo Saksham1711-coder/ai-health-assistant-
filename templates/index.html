@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Heart Assistant</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI';
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            margin-top: 100px;
+        }
+
+        h1 {
+            font-size: 40px;
+        }
+
+        input {
+            width: 350px;
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 15px 25px;
+            margin-left: 10px;
+            border: none;
+            border-radius: 10px;
+            background: #00c6ff;
+            color: black;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 30px;
+            width: 60%;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.1);
+            white-space: pre-line;
+        }
+
+        .loader {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>❤️ AI Heart Health Assistant</h1>
+    <p>Enter your symptoms</p>
+
+    <input id="input" placeholder="e.g. chest pain, fatigue..." />
+    <button onclick="send()">Analyze</button>
+
+    <div class="loader" id="loader">Analyzing...</div>
+
+    <div id="result"></div>
+</div>
+
+<script>
+function send() {
+    let text = document.getElementById("input").value;
+    let loader = document.getElementById("loader");
+    let resultBox = document.getElementById("result");
+
+    resultBox.innerText = "";
+    loader.style.display = "block";
+
+    fetch("/predict", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({text: text})
+    })
+    .then(res => res.json())
+    .then(data => {
+        loader.style.display = "none";
+        resultBox.innerText = data.result;
+    });
+}
+</script>
+
+</body>
+</html>
